@@ -2188,6 +2188,4 @@ public class PMain extends JavaPlugin {
 		}
 		return new String(chs);
 	}
-
-
 }
