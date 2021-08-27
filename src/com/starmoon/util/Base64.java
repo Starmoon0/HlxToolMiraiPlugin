@@ -731,7 +731,6 @@ public class Base64 {
 
             this.op = op;
             this.count = count;
-
             return true;
         }
     }
