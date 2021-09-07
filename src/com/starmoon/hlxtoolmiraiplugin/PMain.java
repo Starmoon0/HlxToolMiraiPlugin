@@ -78,10 +78,10 @@ public class PMain extends JavaPlugin {
 	private int count=200;
 	private static List<Copy> copys=new ArrayList<>();
 	private static List<Access> mCacheAccesses=new ArrayList<>();
-	private static HashSet<Long> admins=new ArrayList<>();
+	private static HashSet<Long> admins=new HashSet<>();
 	private static List<PostComments> sCachePostComments=new ArrayList<>();
 	private static List<MessageReceipt> mReceipts = new ArrayList<>();
-	private static HashSet<Long> adminGroupIDs=new ArrayList<>();
+	private static HashSet<Long> adminGroupIDs=new HashSet<>();
 	static PrintWriter pw;
 	static StringWriter sw=new StringWriter();
 	private static f f;
@@ -309,34 +309,57 @@ public class PMain extends JavaPlugin {
 					// 正文
 					send(group, "指令&说明\n"
 						 + "\n"
+                         + "注：[]里内容为命令参数输入，输入时无需带[]符号\n"
 						 + "●查0回复帖子\n"
 						 + "可以获取版块中最近发布的200个帖子存在多少个0回复帖子。\n"
-						 + "●查0回复帖子+[数字]\n"
+						 + "●查0回复帖子[数量]\n"
 						 + "可以获取版块中最近发布的指定帖子数以内存在多少个0回复帖子。\n"
-						 + "●查板块数据||查版块数据\n"
+                         + "●生成葫芦侠链接&生成葫芦侠3(或大写的“三”)楼链接\n"
+                         + "对已查询的0回复帖子生成帖子网页链接，每次查询之后仅可使用一次，且一次最多不超过10条。\n"                         
+						 + "●查版块数据[版块ID]\n"
 						 + "可以获取版块现在的详细话题数、热度等（精确到个位）。\n"
-						 + "●查关注ID+[用户ID]\n"
+                         + "●开启版块数据统计[版块ID]\n"
+                         + "可以获取版块每日的详细话题数、热度等（精确到个位），每天0点统计一次，并发送至QQ群，仅授权人员可开启。\n"
+                         + "●关闭版块数据统计[版块ID]\n"
+                         + "关闭每日版块数据统计功能，仅授权人员可关闭。\n"
+						 + "●查关注ID [用户ID]\n"
 						 + "可以查看该用户关注列表前10人的数字ID，仅授权QQ群可使用。\n"
-						 + "●查关注前+[数字]+ID+[用户ID]\n"
+						 + "●查关注前[数量]ID [用户ID]\n"
 						 + "可以查看该用户关注列表前几人的数字ID，仅授权QQ群可使用。\n"
-						 + "●查关注第+[数字]+ID+[用户ID]\n"
+						 + "●查关注第[数字]ID [用户ID]\n"
 						 + "可以查看该用户关注列表第几人的数字ID，仅授权QQ群可使用。\n"
-						 + "●查关注第+[数字]+到第+[数字]+ID+[用户ID]\n"
+						 + "●查关注第[数字]到第[数字]ID [用户ID]\n"
 						 + "可以查看该用户关注列表第几人到第几人的数字ID，仅授权QQ群可使用。\n"
+                         + "●查收藏帖子ID [用户ID]\n"
+                         + "可以查看该用户收藏列表前10个帖子的数字ID，仅授权QQ群可使用。\n"
+                         + "●查收藏前[数量]帖子ID [用户ID]\n"
+                         + "可以查看该用户收藏列表前几个帖子的数字ID，仅授权QQ群可使用。\n"
+                         + "●查收藏第[数字]帖子ID [用户ID]\n"
+                         + "可以查看该用户收藏列表第几个帖子的数字ID，仅授权QQ群可使用。\n"
+                         + "●查收藏第[数字]到第[数字]帖子ID [用户ID]\n"
+                         + "可以查看该用户收藏列表第几个到第几个帖子的数字ID，仅授权QQ群可使用。\n"
 						 + "●开启0回复帖子监控\n"
 						 + "开启实时监控版块0回复帖子，超过设定值将提醒回复，仅授权人员可开启。\n"
 						 + "●关闭0回复帖子监控\n"
 						 + "关闭实时监控版块0回复帖子，仅授权人员可关闭。\n"
-						 + "●设置0回复帖子监控数+[数字]\n"
+						 + "●设置0回复帖子监控数[数字]\n"
 						 + "设置实时监控版块0回复帖子的数量，仅授权人员可设置，范围：2位数-4位数数字。\n"
 						 + "●查询0回复帖子监控数\n"
 						 + "查询目前设置的0回复帖子监控数量。\n"
 						 + "●查帖子ID\n"
 						 + "在30秒内分享帖子到群可获得一个该帖子的数字ID。\n"
-						 + "●监控帖子+[帖子ID]\n"
+						 + "●监控帖子[帖子ID]\n"
 						 + "对该帖子ID对应的帖子实行监控，刷新频率2分钟/次，如有最新回复将在刷新时会发送该回复信息到QQ群，仅授权人员可使用。\n"
 						 + "●查询授权人员\n"
 						 + "查询可操作机器人设置的管理人员。\n"
+                         + "●查询授权QQ群\n"
+                         + "查询可使用机器人高级功能的QQ群。\n"
+                         + "●添加负责人员[QQ号] 部门：[部门]\n"
+                         + "添加部门的对应负责人员，仅授权人员可添加。\n"
+                         + "●移除负责人员[QQ号] 部门：[部门]\n"
+                         + "移除部门的对应负责人员，仅授权人员可移除。\n"
+                         + "●查询负责人员\n"
+                         + "查询机器人已添加的负责人员。\n"
 						 + "●开启复读机\n"
 						 + "娱乐指令，你们说一句我重复说一句。\n"
 						 + "●关闭复读机\n"
@@ -398,8 +421,13 @@ public class PMain extends JavaPlugin {
 					comment0s.clear();
 					return;
 				}
-				if (isEquals(isAtSelf, msgStr, "查版块数据") || isEquals(isAtSelf, msgStr, "查板块数据")) {
-					new Thread(new c(group)).start();
+				if (isMatches(isAtSelf, msgStr, "查版块数据[1-9]\\d{0,3}$") || isMatches(isAtSelf, msgStr, "查板块数据[1-9]\\d{0,3}$")) {
+                    try{
+                        int cateId=Integer.parseInt(msgStr.substring(msgStr.indexOf("据")+1,msgStr.length()));
+					    new Thread(new c(group,cateId)).start();
+                    }catch(NumberFormatException e){
+                        send(group, "数据格式错误");
+                    }
 					return;
 				}
 				if (isMatches(isAtSelf, msgStr, "查关注ID[1-9]\\d{1,8}$")) {
@@ -620,7 +648,7 @@ public class PMain extends JavaPlugin {
 					send(group, "关闭成功");
 					return;
 				}
-                if(isMatches(isAtSelf, msgStr, "开启版块数据统计[1-9]\\d{1,3}$")){
+                if(isMatches(isAtSelf, msgStr, "开启版块数据统计[1-9]\\d{0,3}$")){
                     if(!isAdmin(event.getSender().getId()))
                     {
                         send(group, "你没有权限开启版块数据统计功能哦。");
@@ -634,7 +662,7 @@ public class PMain extends JavaPlugin {
                         return;
                     }
                     p p=new p(group, cateId);
-                    Timer timer = TimerUtils.startTimer(p, 0, 0, 0);
+                    TimerUtils.a timer = TimerUtils.startTimer(p, "CateData: "+groupID, 0, 0, 0);
                     data.isTimerRun=true;
                     data.mTimer=timer;
                     save();
@@ -1132,7 +1160,7 @@ public class PMain extends JavaPlugin {
                     sCategoryData.add(data);
                     if (data.isTimerRun) {
                         p p=new p(getGroup(bot, data.groupID), data.cateId);
-                        Timer timer=TimerUtils.startTimer(p, 0, 0, 0);
+                        TimerUtils.a timer=TimerUtils.startTimer(p, "CateData: "+data.groupID, 0, 0, 0);
                         data.mTimer=timer;
                     }
                 }
@@ -1442,12 +1470,13 @@ public class PMain extends JavaPlugin {
 	// 获取版块信息并发送
 	class c implements Runnable {
 		private final Group group;
-		c(Group e) {group = e;}
+        private final int cateId;
+		c(Group e, int cid) {group = e;cateId=cid;}
 
 		@Override
 		public void run() {
 			try {
-				String str=accessCateDetails(63); // 版块ID=63为我的世界版块
+				String str=accessCateDetails(cateId); // 版块ID=63为我的世界版块
 				JSONObject json=new JSONObject(str);
 				long postCount=json.getLong("postCount");
 				long viewCount=json.getLong("viewCount");
@@ -1489,10 +1518,10 @@ public class PMain extends JavaPlugin {
         public int cateId;
         public long lastPostCount;
         public long lastViewCount;
-        public Timer mTimer;
+        public TimerUtils.a mTimer;
     }
     // 每天定时任务
-    class p extends TimerTask
+    class p implements Runnable
     {
         private final Group group;
         private final int cateId;
@@ -1528,6 +1557,8 @@ public class PMain extends JavaPlugin {
                         }
                     data.lastPostCount=postCount;
                     data.lastViewCount=viewCount;
+                    data.mTimer.cancel();
+                    new Thread(new TimerWait(data, this)).start();
                     save();
                     send(group, b.toString());
                 } catch (Throwable e) {
@@ -1539,6 +1570,21 @@ public class PMain extends JavaPlugin {
         }
 
         
+    }
+    class TimerWait implements Runnable
+    {
+        private final CategoryData mData;
+        private final p mP;
+        TimerWait(CategoryData d, p p){
+            mData=d;
+            mP=p;
+        }
+
+        @Override
+        public void run() {
+            mData.mTimer=TimerUtils.startTimer(mP, "CateData: "+mData.groupID, 0, 0, 0);
+        }
+
     }
     // 检测版块0回复帖子
 	class d implements Runnable {
@@ -1616,14 +1662,18 @@ public class PMain extends JavaPlugin {
 		private final int count;
 		private final long userID;
 		private final boolean isOne;
+        private final boolean isShowWarning;
 		e(Group e, long u) {
 			this(10, e, u, false);
+            isShowWarning=false;
+            
 		}
 		e(int c, Group e, long u, boolean is) {
 			count = c;
 			group = e;
 			userID = u;
 			isOne = is;
+            isShowWarning=true;
 		}
 
 		@Override
@@ -1644,6 +1694,7 @@ public class PMain extends JavaPlugin {
 						send(group, "你要查询的数值超出了该用户的关注总数，该用户仅关注了" + length + "人。");
 						return;
 					}
+                    if(isShowWarning)
 					b.append("你要查询的数值超出了该用户的关注总数，仅展示" + length + "人的数字ID。\n");
 					n = length;
 				}
@@ -1698,10 +1749,10 @@ public class PMain extends JavaPlugin {
                 StringBuilder b=new StringBuilder();
                 if (length < n) {
                     if (isOne) {
-                        send(group, "你要查询的数值超出了该用户的收藏总数，该用户仅收藏了" + length + "个帖子。");
+                        send(group, "你要查询的数值超出了该用户的收藏总数（可能收藏了葫芦山版块的帖子），试试查收藏前几个帖子ID以显示你要查询的帖子ID。");
                         return;
                     }
-                    b.append("你要查询的数值超出了该用户的收藏总数，仅展示" + length + "个帖子的数字ID。\n");
+                    b.append("你要查询的数值超出了该用户的收藏总数（可能收藏了葫芦山版块的帖子），仅展示" + length + "个帖子的数字ID。\n");
                     n = length;
                 }
                 if (isOne) {
@@ -1992,7 +2043,8 @@ public class PMain extends JavaPlugin {
 						JSONObject jo=ars.getJSONObject(n);
 						long commentID = jo.getLong("commentID");
 						for (int i=0;i < pc.sendedComments.length();i++) {
-							if (pc.sendedComments.getJSONObject(i).getLong("commentID") == commentID)
+                            long comid=pc.sendedComments.getJSONObject(i).getLong("commentID");
+							if (comid == commentID)
 								continue con;
 						}
 						String s=jo.getString("identityTitle");
@@ -2188,4 +2240,6 @@ public class PMain extends JavaPlugin {
 		}
 		return new String(chs);
 	}
+
+
 }
